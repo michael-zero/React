@@ -1,6 +1,7 @@
 import React from 'react'
 
-const RadioDesafio = ({pergunta, id, options, onChange, value}) => { 
+const RadioDesafio = ({active, pergunta, id, options, onChange, value, slide}) => { 
+    if(!active) return null
     return (
         <fieldset style={{padding: '2rem', marginBottom: "1rem", border: "2px solid #eee"}}>
             <legend style={{fontWeight: "bold"}}>{pergunta}</legend>
