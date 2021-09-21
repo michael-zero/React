@@ -1,35 +1,56 @@
 import React from 'react'
-import Checkbox from './Form/Checkbox';
 import Input from './Form/Input';
-import Radio from './Form/Radio';
-import Select from './Form/Select';
 
 function App() {
+  const [cep, setCep] = React.useState("")
+  const [error, setError] = React.useState(null)
 
-  const [nome, setNome] = React.useState('')
-  const [produto, setProduto] = React.useState('')
-  const [time, setTime] = React.useState('')
-  const [perifericos, setPerifericos] = React.useState([])
+
+  const validateCep = (value) => {
+    
+    //  ^ - começa com 5 dígitos
+    //  $ - termina com 3 digitos
+    // -? - poder ter o não o "-"
+
+    if(!value){
+      setError("Preencha um valor")
+      return false
+    }else if(!/^\d{5}-?\d{3}$/.test(value)){
+      setError("Preencha com um CEP válido.")
+      return false
+    }else{
+      setError(null)
+      return true
+    }
+  }
+
+  const handleBlur = ({target}) => {
+    validateCep(target.value)
+  }
+
+  const onChange = ({target}) => {
+    if(error) validateCep(target.value)
+    setCep(target.value)
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if(validateCep(cep)){
+      console.log("Enviou!")
+    }else{
+      console.log("Não deve enviar!")
+    }
+  }
 
   return ( 
-  <form>
+  <form onSubmit={handleSubmit}>
+      <Input label='CEP' type="text" id="cep" placeholder="00000-000" 
+      value={cep} onChange={onChange}
+      onBlur={handleBlur}
+      />
+      {error && <p>{error}</p>}
 
-    {/* Mais de Um */}
-     <h2>Periféricos</h2>
-     <Checkbox options={['Mouse','Monitor']} value={perifericos} setValue={setPerifericos}/>
-
-     {/* Opção Única */}
-     <h2>Time</h2>
-     <Radio options={['Palmeiras', 'Timon FC']} value={time} setValue={setTime}/>
-
-
-    <h2>Linguagens</h2>
-     <Select options={['Javascript', 'Python', 'C']} value={produto} setValue={setProduto}/>
-
-     <p>{nome}</p>
-     <Input label='Nome' id='nome' value={nome} setValue={setNome}/>
-
-
+      <button>Enviar</button>
   </form>
 );
 }
